@@ -20,42 +20,14 @@ Game::~Game() {
 }
 
 float playerx = 0, playery = 0, speed = 5;
+bool XInvert = false;
+bool YInvert = false;
 const Uint8 *_Pkeyboard = SDL_GetKeyboardState(0);
 
 
 void Game::RawEvent(SDL_Event event, int _windowWidth, int _windowHeight) {
     // Events (Keyboard, Mouse, etc.)
     Console console;
-    
-    // Type-Style KeyDown (Hold Key)
-    if (_Pkeyboard[SDL_SCANCODE_D]) {
-        // Pressed
-        playerx += speed;
-    } else {
-        // Released
-    }
-    
-    if (_Pkeyboard[SDL_SCANCODE_A]) {
-       // Pressed
-        console.Println("Type Style Left Key Pressed");
-        playerx -= speed;
-    } else {
-        // Released
-    }
-
-    if (_Pkeyboard[SDL_SCANCODE_W]) {
-        // Pressed
-        playery -= speed;
-    } else {
-        // Released
-    }
-    
-    if (_Pkeyboard[SDL_SCANCODE_S]) {
-        // Pressed
-        playery += speed;
-    } else {
-        // Released
-    }
 }
 
 void Game::Event(SDL_Event event) {
@@ -64,24 +36,6 @@ void Game::Event(SDL_Event event) {
     // Quit
     if(event.type == SDL_QUIT) {
         Core::corerunning = false;
-    }
-    
-    // KeyUp and KeyDown
-    // Pressed
-    if(event.type == SDL_KEYDOWN) {
-        switch(event.key.keysym.sym){
-        case SDLK_LEFT:
-            console.Println("Left Key Pressed");
-            break;
-        }
-    }
-    // Released
-    if(event.type == SDL_KEYUP) {
-        switch(event.key.keysym.sym) {
-            case SDLK_LEFT:
-                console.Println("Left Key Lifted");
-                break;
-        }
     }
 }
 
@@ -92,6 +46,33 @@ void Game::Start() {
 
 void Game::Update() {
     // Executes every frame at game
+    
+    // X = 1175 as end of X
+    // Y = 615 as end of Y
+    
+    if (!XInvert) {
+        playerx += speed;
+    } else {
+        playerx -= speed;
+    }
+    
+    if (!YInvert) {
+        playery += speed - 2;
+    } else {
+        playery -= speed - 2;
+    }
+    
+    if (playerx >= 1175) {
+        XInvert = true;
+    } else if (playerx <= 0) {
+        XInvert = false;
+    }
+    
+    if (playery >= 615) {
+        YInvert = true;
+    } else if (playery <= 0) {
+        YInvert = false;
+    }
 }
 
 void Game::Render() {
